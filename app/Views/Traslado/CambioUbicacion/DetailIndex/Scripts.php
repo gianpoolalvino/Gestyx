@@ -1,0 +1,3 @@
+<script>
+    $('.tooltipBtn').tooltip();
+</script>

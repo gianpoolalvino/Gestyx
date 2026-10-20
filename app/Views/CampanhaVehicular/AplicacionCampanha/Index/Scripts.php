@@ -1,0 +1,250 @@
+<script>
+    var cont =$("#countReg").val();
+    var rango =$("#totalRegistros").val();
+
+
+    $(document).on('change', '#tipoFiltro', function (e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        var tipoFiltro = $("#tipoFiltro").val();
+        if(tipoFiltro!=''){
+
+        }
+    } );
+
+    $(document).on('click', '#btnSearch', function (e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+
+        DetailIndexFilt();
+    });
+
+    $(document).on('click', '.btnAddCampanha', function (e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        var vin = $(this).attr("data-vin");
+        AsociarCampanha(vin);
+    });
+
+    function AsociarCampanha(vin)
+    {
+        $.ajax({
+            type: 'POST',
+            url: "<?php echo base_url("CampanhaVehicular/AplicacionCampanha/CreateViewEdit/CreateAplicarCampanha")?>",
+            data: {vin:vin},
+            beforeSend: function() {
+
+            },
+            success: function(data) {
+                let dato = $.parseJSON(data);
+                if(dato.status='success'){
+                    ModalAdicionales.show();
+                    $("#BodyAdicionales").html(dato.info);
+                }
+            },
+            error: function(xhr) {
+
+            }
+        });
+    }
+
+    $(document).on('click', '#btnIndexCcampanhas', function (e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        $.ajax({
+            type: 'POST',
+            url: "<?php echo base_url("CampanhaVehicular/AplicacionCampanha/Index/IndexCampanha")?>",
+            data: {},
+            beforeSend: function() {
+
+            },
+            success: function(data) {
+                let dato = $.parseJSON(data);
+                if(dato.status='success'){
+                    $("#ModalRight").html(dato.info);
+                }
+
+            },
+            error: function(xhr) {
+
+            }
+        });
+    });
+
+    $(document).on('click', '#btnDeleteFilt', function (e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        location.reload();
+    });
+
+    $(document).on('click', '.btnApliCampanha', function (e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        var idvinCampanha = $(this).attr("data-idvinCampanha");
+        var estado = $(this).attr("data-estado");
+        var vin = $(this).attr("data-vin");
+        var idcampanha = $(this).attr("data-idcampanha");
+
+        if(estado==1 || estado==4){
+            Notificacion('warning', 'Aplicada', 'La Campaña ya se encuentra aplicada');
+        }else{
+            AplicarCampanha(idvinCampanha,vin,idcampanha);
+        }
+    });
+
+    function AplicarCampanha(idvinCampanha,vin,idcampanha)
+    {
+        $.ajax({
+            type: 'POST',
+            url: "<?php echo base_url("CampanhaVehicular/AplicacionCampanha/CreateViewEdit/AplicarCampanha")?>",
+            data: {idvinCampanha:idvinCampanha,vin:vin,idcampanha:idcampanha},
+            beforeSend: function() {
+
+            },
+            success: function(data) {
+                let dato = $.parseJSON(data);
+                ModalAdicionales.show();
+                $("#BodyAdicionales").html(dato.info);
+            },
+            error: function(xhr) {
+
+            }
+        });
+    }
+
+    $(document).on('click', '.vinAccesorios', function (e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        var opcion = $(this).attr("data-opcion");
+        var vin= $(this).attr("data-vin");
+
+        if(opcion=="Proceso"){
+            ViewVinProceso(vin)
+        }
+    });
+
+    function VinInfo(vin)
+    {
+        $.ajax({
+            type: 'POST',
+            url: "<?php echo base_url("InfoVin")?>",
+            data: {vin:vin},
+            beforeSend: function() {
+
+            },
+            success: function(data) {
+                let dato = $.parseJSON(data);
+                $("#panelVinInfo").html(dato.info);
+            },
+            error: function(xhr) {
+
+            }
+        });
+    }
+
+    function ViewVinProceso(vin)
+    {
+        $.ajax({
+            type: 'POST',
+            url: "<?php echo base_url("CampanhaVehicular/AplicacionCampanha/CreateViewEdit/Create")?>",
+            data: {vin:vin},
+            beforeSend: function() {
+
+            },
+            success: function(data) {
+                let dato = $.parseJSON(data);
+                ModalInfoVehiculo.show();
+                $("#bodyInfoVehicular").html(dato.info);
+                if(dato.status=='success'){
+                    VinInfo(vin);
+                }
+            },
+            error: function(xhr) {
+
+            }
+        });
+    }
+
+
+    function changePage(page) {
+        // Establecer el valor del 'start' para el nuevo número de página
+        $("#start").val((page - 1) * 20);  // Ajustar el valor de `start` según la página seleccionada
+        DetailIndexFilt(page);  // Llamar la función para actualizar los datos de la tabla y la paginación
+    }
+
+    // Función para cargar los datos
+    function DetailIndexFilt(page = 1) {
+
+        var start = $("#start").val();  // Establecer el inicio según el valor de la página seleccionada
+        var countReg = 0;
+        var total = $("#totalRegistros").val();  // Total de registros
+        var tipoFiltr = $("#tipoFiltro").val();
+        var filtro = $("#filtro").val();
+
+        $.ajax({
+            type: 'POST',
+            url: "<?php echo base_url("CampanhaVehicular/AplicacionCampanha/Index/DetailIndex")?>",
+            data: {start: start, countReg: countReg, total: total, tipoFiltr: tipoFiltr, filtro: filtro, page: page},  // Agregar 'page' a los datos
+            beforeSend: function() {
+                Preloader("Cargado Datos...")  // Mostrar el indicador de carga
+            },
+            success: function(data) {
+                var dato = $.parseJSON(data);
+                ClosePreloader();
+                // Actualizar el cuerpo de la tabla
+                $("#tbodyAlistamiento").html(dato.tbody);
+
+                // Actualizar la paginación
+                $("#pagination").html(dato.paginationHtml);  // Actualizar el HTML de la paginación
+
+                // Actualizar el total de registros
+                $("#totalRegistros").val(dato.total);
+
+                $("#cargarData").fadeOut();  // Ocultar el indicador de carga
+            },
+            error: function(xhr) {
+                ClosePreloader();
+                console.error("Error en la solicitud AJAX.");
+            }
+        });
+    }
+
+    // Cargar los datos iniciales
+    $(document).ready(function() {
+        DetailIndexFilt(1);  // Llamamos a la función con la página inicial (1)
+    });
+
+
+    function DetailIndexScroll()
+    {
+        var start = $("#start").val();
+        var countReg = $("#countReg").val();
+        var total = $("#totalRegistros").val();
+        var tipoFiltr = $("#tipoFiltro").val();
+        var filtro = $("#filtro").val();
+        $.ajax({
+            type: 'POST',
+            url: "<?php echo base_url("CampanhaVehicular/AplicacionCampanha/Index/DetailIndex")?>",
+            data: {start:start,countReg:countReg,total:total,tipoFiltr:tipoFiltr,filtro:filtro},
+            beforeSend: function() {
+
+            },
+            success: function(data) {
+                let dato = $.parseJSON(data);
+                $("#tbodyAlistamiento").append(dato.tbody);
+                $("#start").val(dato.start);
+                $("#start").html(dato.start);
+                $("#countReg").val(dato.countReg);
+                $("#countReg").html(dato.countReg);
+
+                if(dato.total==dato.countReg){
+                    clearInterval(idIterval);
+                    $("#cargarData").fadeOut();
+                }
+            },
+            error: function(xhr) {
+
+            }
+        });
+    }
+</script>

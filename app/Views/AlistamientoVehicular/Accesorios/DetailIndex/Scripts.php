@@ -1,0 +1,3 @@
+<script>
+    $('.vinAccesorios').tooltip();
+</script>
