@@ -62,7 +62,7 @@ $hoy = date("Y-m-d");
             <label class="spanlabel" style="font-size: 12px">Foto Guia (*)</label><br>
             <?php
             if(!is_null($datosIngreso[0]["imagenGuia"])){
-                $base64 = 'data:image/' . $datosIngreso[0]["tipoImagen"] . ';base64,' . $datosIngreso[0]["imagenGuia"]; ?>
+                $base64 = imagen_src($datosIngreso[0]["imagenGuia"], $datosIngreso[0]["tipoImagen"]); ?>
                 <img style="width: 20%" src="<?php echo $base64?>">
             <?php } ?>
         </div>

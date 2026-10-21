@@ -528,6 +528,11 @@ private function agregarImagenDesdeBase64($sheet, $celda, $imagen, $tipoImagen, 
     if (!empty($imagen) && $imagen !== 'null') {
         $tempImage = null;
 
+        // Ruta en disco (la imagen puede venir con idtipoCarga = 2 o, en la guia, sin flag)
+        if ($idtipoCarga != 2 && imagen_es_ruta($imagen)) {
+            $idtipoCarga = 2;
+        }
+
         // Carga tipo base64 (idtipoCarga = 1)
         if ($idtipoCarga == 1) {
             $imagen = str_replace('data:' . $tipoImagen . ';base64,', '', $imagen);
@@ -633,13 +638,21 @@ private function agregarImagenDesdeBase64($sheet, $celda, $imagen, $tipoImagen, 
                     echo json_encode($send);
                     exit();
                 } else {
-                    $path = $archivo;
-                    $type = pathinfo($path, PATHINFO_EXTENSION);
-                    $data = $archivo;
+                    // La foto de la guia se guarda en disco; en la BD solo va la ruta
+                    $vinCarpeta = preg_replace('/[^A-Za-z0-9_\-]/', '', $_POST["vinIngreso"]);
+                    $rutaGuia = imagen_guardar($archivo, 'ingresoVin/' . $vinCarpeta . '/Guia', 'guia', $typo);
+                    if ($rutaGuia === null) {
+                        echo json_encode([
+                            "status" => "danger",
+                            "title" => "Error de Carga",
+                            "message" => "No se pudo guardar la imagen de la guia en el servidor"
+                        ]);
+                        exit();
+                    }
                     $dato+=[
-                        'imagenGuia' => base64_encode(file_get_contents($data)),
+                        'imagenGuia' => $rutaGuia,
                         'nombreImagen' => $temp,
-                        'tipoImagen' => $typo,
+                        'tipoImagen' => pathinfo($rutaGuia, PATHINFO_EXTENSION), // puede ser webp
                         'fechaCarga' => $hoy,
                         'horaCarga' => $hora
                     ];
