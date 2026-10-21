@@ -54,9 +54,9 @@ class Database extends Config
 
     public array $sesiones = [
         'DSN'          => '',
-        'hostname'     => '192.168.1.2:3306',
+        'hostname'     => '192.168.110.101:3306',
         'username'     => 'user_logistica',
-        'password'     => 'jR4kvGWd4%Zi',
+        'password'     => '123',
         'database'     => 'sessions',
         'DBDriver'     => 'MySQLi',
         'DBPrefix'     => '',
