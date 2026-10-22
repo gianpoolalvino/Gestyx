@@ -91,16 +91,14 @@ class ControlCalidadModel extends Model
     {
         $builder=$this->db->table("detalleequipamientocalidad");
         $builder->where($filtro);
-        $builder->update($equipamiento);
-        return $builder->get()->getResultArray();
+        return $builder->update($equipamiento);
     }
 
     public function UpdateDetalleCheckCalidad($filtroCheck,$checkCalidad)
     {
         $builder=$this->db->table("detallechecklistcalidad");
         $builder->where($filtroCheck);
-        $builder->update($checkCalidad);
-        return $builder->get()->getResultArray();
+        return $builder->update($checkCalidad);
     }
 
     public function UpdateDetalleCheckCalidadv2($idcheckCalidad, $checkCalidad)

@@ -145,8 +145,8 @@ class IngresoModel extends Model
     {
         $builder=$this->db->table("detalleingresovehiculoimagen");
         $builder->where($filtro);
-        $builder->update($update);
-        return $builder->get()->getResultArray();
+        // Devuelve el resultado del update: un get() despues del update ya no tiene WHERE y lee toda la tabla (fotos incluidas)
+        return $builder->update($update);
     }
 
     public function SelectTipoDanho()
@@ -251,8 +251,7 @@ class IngresoModel extends Model
     {
         $builder=$this->db->table("observacioningresovin");
         $builder->where($filtro);
-        $builder->update($update);
-        return $builder->get()->getResultArray();
+        return $builder->update($update);
     }
 
     public function DeleteDuaf($filtrodelet)
