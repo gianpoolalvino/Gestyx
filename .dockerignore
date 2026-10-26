@@ -1,0 +1,5 @@
+.env
+.gitignore
+*.xlsx
+
+/writable

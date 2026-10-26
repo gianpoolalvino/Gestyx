@@ -254,7 +254,12 @@ class CreateViewEdit extends BaseController
     {
         $vinModel=New VinModel();
         // Datos que quieres codificar en el QR
-        $data = $_POST["vin"];
+        $vin  = $_POST["vin"];
+        $info = $vinModel->VinInfo($vin);                          // marca desde la base
+        // $data = $vin . "\n" . ($info[0]["marca"] ?? "");           // VIN, salto de línea, MARCA
+        $data = "vin: ". $vin . "\n" ."marca: " . $info[0]["marca"] . "\n" . "modelo: " . $info[0]["modelo"];
+
+
 
         // Crear el objeto QrCode
         $qrCode = new QrCode($data);
