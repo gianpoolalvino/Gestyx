@@ -106,24 +106,8 @@ $hoy = date("Y-m-d");
                         <div class="row pb-2">
                             <div class="col-12">
                                 <div class="form-floating">
-                                    <textarea class="form-control form-control-sm" style="height: 80px" id="message">¡Buen día!☀
-Señor, <?php echo $infoVin[0]['nombreCliente']?>.
-Es un placer darle la bienvenida a nuestra familia Autoniza 🚗.
-Queremos agradecerle por elegir nuestra marca para la adquisición de su próximo vehículo.
-
-Nos complace informarle que su vehículo:
-✅ Modelo : <?php echo $infoVin[0]['marca']." - ".$infoVin[0]['modelo']?>
-
-✅ Año : <?php echo $infoVin[0]['anhoModelo']?>
-
-✅ Color : <?php echo $infoVin[0]['color']?>
-                                        
-Se encuentra actualmente en proceso de alistamiento .
-
-Recuerde que, ante cualquier duda o inquietud, estaré atenta para ayudarle. Mi nombre es German Torres Avalos, programadora de entregas.
-
-¡Gracias por confiar en nosotros!</textarea>
-                                    <label for="floatingSelect">Correo</label>
+                                    <textarea class="form-control form-control-sm" style="height: 350px" id="message"><?php echo trim(service('parser')->setData($datosMensaje)->render('Confirmacion/LlamadaBienvenida/Create/MensajeBienvenida')) ?></textarea>
+                                    <label for="message">Mensaje</label>
                                 </div>
                             </div>
                         </div>

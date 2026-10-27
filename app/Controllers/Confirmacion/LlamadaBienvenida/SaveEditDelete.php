@@ -110,6 +110,12 @@ class SaveEditDelete extends BaseController
                 'telefonoCliente'=>$_POST["telefonoCliente"],
                 'correoCliente'=>$_POST["correoCliente"],
                 'direccionCliente'=>$_POST["direccionCliente"]
+                'documentoCliente'=>$_POST["documentoCliente"]
+                'tipoNegocio'=>$_POST["tipoNegocio"]
+                'vin'=>$_POST["vin"]
+                'modelo'=>$_POST["modelo"]
+                'anhoModelo'=>$_POST["anhoModelo"]
+                'marca'=>$_POST["marca"]
             ];
 
             $database = session("database");

@@ -13,12 +13,23 @@ class CreateViewEdit extends BaseController
         $agenciaProveedor=new AgenciaProveedorModel();
         $vin=$_POST["vin"];
         $infoGen=$alistamientoVehicular->ViewVin($vin);
+        $equipamientoVin=$alistamientoVehicular->EquipamientoVin($vin);
+        $infoVinDatos=$infoGen[0];
+        $extraPorMarca=[
+            'CHEVROLET'=>['CUPONERA DE DESCUENTOS'],
+        ];
+        $listaEquipamiento=array_merge(
+            array_column($equipamientoVin, 'equipamiento'),
+            $extraPorMarca[strtoupper($infoGen[0]['marca'])] ?? []
+        );
+        $infoVinDatos['equipamiento']=implode("\n", array_map(fn($item)=>"• ".$item, $listaEquipamiento));
         $filtro=[
             'codigoAgencia'=>$infoGen[0]["codigoAgencia"]
         ];
         $dats=[
-            'infoVin'=>$alistamientoVehicular->ViewVin($vin),
-            'equipamientoVin'=>$alistamientoVehicular->EquipamientoVin($vin),
+            'infoVin'=>$infoGen,
+            'equipamientoVin'=>$equipamientoVin,
+            'datosMensaje'=>$infoVinDatos,
             'vin'=>$vin
         ];
 

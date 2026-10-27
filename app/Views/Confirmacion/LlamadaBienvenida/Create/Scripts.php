@@ -25,4 +25,18 @@
         });
         return false;
     });
+
+    document.getElementById('btnSendVeri').addEventListener('click', ()=> {
+
+        let numberClient=document.getElementById('telefonoCliente').value.trim();
+        const welcomeCliente=document.getElementById('message').value.trim();
+
+        if (!numberClient || !welcomeCliente) {
+            Notificacion('warning', 'WhatsApp', 'Ingrese el número y el mensaje.');
+            return;
+        }
+
+        window.open('https://wa.me/' + numberClient + '?text=' + encodeURIComponent(welcomeCliente), '_blank');
+    });
+
 </script>
