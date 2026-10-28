@@ -37,6 +37,16 @@
         }
 
         window.open('https://wa.me/' + numberClient + '?text=' + encodeURIComponent(welcomeCliente), '_blank');
+
+        $.post("<?php echo base_url('Confirmacion/LlamadaBienvenida/SaveEditDelete/MarcarWspEnviado') ?>",
+        { vin: "<?php echo $vin ?>" },
+        function (data) {
+            let dato = $.parseJSON(data);
+            if (dato.status == "success") {
+                Notificacion('success', 'WhatsApp', 'Estado actualizado.');
+            }
+        });
+        
     });
 
 </script>

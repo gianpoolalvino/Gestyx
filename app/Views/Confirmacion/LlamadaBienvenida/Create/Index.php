@@ -3,10 +3,21 @@ date_default_timezone_set("America/Lima");
 $hoy = date("Y-m-d");
 ?>
 <div class="modal-body">
-    <div class="form-row">
-        <div class="col-12">
+    <div class="d-flex justify-content-between">
+        <div class="">
             <h5>Confirmacion - Llamada Bienvenida (VIN: <?php echo $vin ?>)</h5>
             <input hidden name="sessionwsp" id="sessionwsp" value="<?php echo session("idusuario") ?>">
+        </div>
+        <div>
+            <?php 
+            $sendMessageWsp = $infoVin[0]["wsp"];
+            $enviado = ($sendMessageWsp == 1);
+            $valueMessageWsp = $enviado ? "ENVIADO" : "NO ENVIADO";
+            $colorWsp = $enviado ? "bg-success" : "bg-danger";
+            ?>
+            <p class="<?php echo $colorWsp ?> p-2 rounded text-white align-items-center d-flex">
+                <strong>WhatsApp : </strong> <?php echo $valueMessageWsp ?>
+            </p>
         </div>
     </div>
     <div class="form-row">

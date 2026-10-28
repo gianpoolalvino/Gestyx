@@ -109,13 +109,7 @@ class SaveEditDelete extends BaseController
             $updateTelf=[
                 'telefonoCliente'=>$_POST["telefonoCliente"],
                 'correoCliente'=>$_POST["correoCliente"],
-                'direccionCliente'=>$_POST["direccionCliente"]
-                'documentoCliente'=>$_POST["documentoCliente"]
-                'tipoNegocio'=>$_POST["tipoNegocio"]
-                'vin'=>$_POST["vin"]
-                'modelo'=>$_POST["modelo"]
-                'anhoModelo'=>$_POST["anhoModelo"]
-                'marca'=>$_POST["marca"]
+                'direccionCliente'=>$_POST["direccionCliente"],
             ];
 
             $database = session("database");
@@ -328,6 +322,21 @@ class SaveEditDelete extends BaseController
                     echo json_encode($dato);
                     exit();
                 }
+            }
+        }
+
+        public function marcarWspEnviado(){
+            $alistamientoVehicular = New AlistamientoVehicularModel();
+            $vin = $_POST["vin"];
+            $updateWsp=[
+                'wsp'=>1
+            ];
+            $vinfiltro = ['vin' => $vin];
+            $update = $alistamientoVehicular->UpdateVinAccesorio($vinfiltro, $updateWsp);
+            if($update){
+                echo json_encode(["status"=>'success']);
+            }else{
+                echo json_encode(["status"=>'error']);
             }
         }
 }
